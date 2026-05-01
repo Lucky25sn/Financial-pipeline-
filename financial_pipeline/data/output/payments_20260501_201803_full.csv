@@ -1,0 +1,12 @@
+id,account_id,date,amount,currency,type,description,amount_clean,date_clean,currency_clean,type_clean,account_id_clean,_status,_error_summary
+PAY001,ACC300,2024-04-01,4500,ZAR,payment,INV-2024-001,4500,2024-04-01,ZAR,payment,ACC300,valid,
+PAY002,ACC301,2024-04-02,1200,USD,debit,,1200,2024-04-02,USD,debit,ACC301,valid,
+PAY003,ACC302,2024-04-03,-300,EUR,credit,REF-003,-300,2024-04-03,EUR,credit,ACC302,rejected,Amount must be positive
+PAY004,,2024-04-04,6700,GBP,transfer,REF-004,6700,2024-04-04,GBP,transfer,,rejected,Missing account ID
+PAY005,ACC304,bad-date,900,ZAR,payment,REF-005,900,,ZAR,payment,ACC304,rejected,Invalid or unparseable date
+PAY001,ACC305,2024-04-06,2200,ZAR,credit,REF-006,2200,2024-04-06,ZAR,credit,ACC305,rejected,Duplicate transaction ID
+PAY006,ACC306,2024-04-07,5500,ZAR,payment,REF-007,5500,2024-04-07,ZAR,payment,ACC306,valid,
+PAY007,ACC307,2024-04-08,780,ABC,debit,REF-008,780,2024-04-08,ABC,debit,ACC307,rejected,Invalid currency code 'ABC'
+PAY008,ACC308,2024-04-09,3400,USD,payment,REF-009,3400,2024-04-09,USD,payment,ACC308,valid,
+PAY009,ACC309,2024-04-10,9100,ZAR,payment,REF-010,9100,2024-04-10,ZAR,payment,ACC309,valid,
+PAY010,ACC310,2024-04-11,6600,EUR,transfer,REF-011,6600,2024-04-11,EUR,transfer,ACC310,valid,

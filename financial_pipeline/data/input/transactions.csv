@@ -1,0 +1,16 @@
+transaction_id,account_id,date,amount,currency,type,description
+TXN001,ACC100,2024-01-15,1500.00,ZAR,debit,Supplier payment
+TXN002,ACC101,2024/01/16,2200,usd,credit,Client invoice
+TXN003,,2024-01-17,-500,EUR,debit,Refund
+TXN004,ACC102,not-a-date,800,GBP,transfer,Internal move
+TXN005,ACC100,2024-01-18,3400.50,ZAR,debit,
+TXN006,ACC103,2024-01-19,620,ZAR,payment,Rent
+TXN007,ACC103,2024-01-20,0,ZAR,debit,Zero amount test
+TXN001,ACC104,2024-01-21,900,ZAR,credit,Duplicate ID test
+TXN008,ACC105,2024-02-01,14200,EUR,payment,Consulting fee
+TXN009,ACC106,2024-02-03,5600,ZAR,credit,Sales revenue
+TXN010,ACC107,2024-02-04,320.75,GBP,transfer,Wire transfer
+TXN011,ACC108,2024-02-05,88000,ZAR,payment,Equipment lease
+TXN012,ACC109,2024-02-06,1100,XYZ,debit,Unknown currency test
+TXN013,ACC110,2024-02-07,4500,ZAR,payment,Office supplies
+TXN014,ACC111,2024-02-08,2750,USD,credit,Export revenue

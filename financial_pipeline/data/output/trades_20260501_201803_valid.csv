@@ -1,0 +1,7 @@
+id,account_id,date,amount,currency,type,description,quantity,amount_clean,date_clean,currency_clean,type_clean,account_id_clean,_status
+TRD001,ACC200,2024-03-01,50000,USD,buy,AAPL,100,50000,2024-03-01,USD,buy,ACC200,valid
+TRD005,ACC203,2024-03-05,22000,ZAR,sell,MTN,200,22000,2024-03-05,ZAR,sell,ACC203,valid
+TRD006,ACC204,2024-03-06,9900,USD,buy,NVDA,15,9900,2024-03-06,USD,buy,ACC204,valid
+TRD008,ACC206,2024-03-08,31500,USD,sell,AMZN,25,31500,2024-03-08,USD,sell,ACC206,valid
+TRD009,ACC207,2024-03-09,7800,EUR,buy,SAP,40,7800,2024-03-09,EUR,buy,ACC207,valid
+TRD010,ACC208,2024-03-10,4400,GBP,sell,BP,80,4400,2024-03-10,GBP,sell,ACC208,valid

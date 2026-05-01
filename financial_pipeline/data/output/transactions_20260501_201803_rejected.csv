@@ -1,0 +1,7 @@
+id,account_id,date,amount,currency,type,description,amount_clean,date_clean,currency_clean,type_clean,account_id_clean,_status,_error_summary
+TXN002,ACC101,2024/01/16,2200,usd,credit,Client invoice,2200.0,,USD,credit,ACC101,rejected,Invalid or unparseable date
+TXN003,,2024-01-17,-500,EUR,debit,Refund,-500.0,2024-01-17,EUR,debit,,rejected,Amount must be positive; Missing account ID
+TXN004,ACC102,not-a-date,800,GBP,transfer,Internal move,800.0,,GBP,transfer,ACC102,rejected,Invalid or unparseable date
+TXN007,ACC103,2024-01-20,0,ZAR,debit,Zero amount test,0.0,2024-01-20,ZAR,debit,ACC103,rejected,Amount must be positive
+TXN001,ACC104,2024-01-21,900,ZAR,credit,Duplicate ID test,900.0,2024-01-21,ZAR,credit,ACC104,rejected,Duplicate transaction ID
+TXN012,ACC109,2024-02-06,1100,XYZ,debit,Unknown currency test,1100.0,2024-02-06,XYZ,debit,ACC109,rejected,Invalid currency code 'XYZ'

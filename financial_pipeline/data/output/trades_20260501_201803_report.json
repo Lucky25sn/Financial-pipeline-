@@ -1,0 +1,24 @@
+{
+  "source": "trades",
+  "run_at": "2026-05-01T20:18:03.224711",
+  "total_records": 10,
+  "valid_records": 6,
+  "rejected_records": 4,
+  "quality_rate_pct": 60.0,
+  "error_breakdown": {
+    "Amount must be positive": 2,
+    "Missing account ID": 1,
+    "Invalid or unparseable date": 1
+  },
+  "currency_totals": {
+    "USD": 91400.0,
+    "ZAR": 22000.0,
+    "EUR": 7800.0,
+    "GBP": 4400.0
+  },
+  "output_files": {
+    "valid": "/home/claude/financial_pipeline/data/output/trades_20260501_201803_valid.csv",
+    "rejected": "/home/claude/financial_pipeline/data/output/trades_20260501_201803_rejected.csv",
+    "full": "/home/claude/financial_pipeline/data/output/trades_20260501_201803_full.csv"
+  }
+}

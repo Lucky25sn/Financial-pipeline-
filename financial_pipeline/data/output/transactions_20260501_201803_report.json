@@ -1,0 +1,26 @@
+{
+  "source": "transactions",
+  "run_at": "2026-05-01T20:18:03.257819",
+  "total_records": 15,
+  "valid_records": 9,
+  "rejected_records": 6,
+  "quality_rate_pct": 60.0,
+  "error_breakdown": {
+    "Invalid or unparseable date": 2,
+    "Amount must be positive": 2,
+    "Missing account ID": 1,
+    "Duplicate transaction ID": 1,
+    "Invalid currency code 'XYZ'": 1
+  },
+  "currency_totals": {
+    "ZAR": 103620.5,
+    "EUR": 14200.0,
+    "GBP": 320.75,
+    "USD": 2750.0
+  },
+  "output_files": {
+    "valid": "/home/claude/financial_pipeline/data/output/transactions_20260501_201803_valid.csv",
+    "rejected": "/home/claude/financial_pipeline/data/output/transactions_20260501_201803_rejected.csv",
+    "full": "/home/claude/financial_pipeline/data/output/transactions_20260501_201803_full.csv"
+  }
+}

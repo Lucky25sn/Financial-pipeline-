@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Pipeline Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1117; --surface: #181c27; --card: #1e2333;
+    --border: rgba(255,255,255,0.07); --text: #e8eaf0; --muted: #7a849a;
+    --green: #22c97b; --red: #f05252; --amber: #f5a623; --blue: #4a9eff;
+    --purple: #a78bfa;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
+  .header { padding: 28px 32px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; }
+  .header h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+  .header h1 span { color: var(--blue); }
+  .header p { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .run-select { display: flex; gap: 8px; align-items: center; }
+  .run-select label { font-size: 12px; color: var(--muted); }
+  select { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .main { padding: 24px 32px; max-width: 1200px; }
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .metric-card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+  .metric-card .value { font-size: 32px; font-weight: 600; line-height: 1; }
+  .metric-card .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .metric-card.green .value { color: var(--green); }
+  .metric-card.red .value { color: var(--red); }
+  .metric-card.amber .value { color: var(--amber); }
+  .metric-card.blue .value { color: var(--blue); }
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .chart-card h3 { font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .chart-full { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+  .chart-full h3 { font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .table-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+  .table-card .table-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .table-card h3 { font-size: 13px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .filter-row { display: flex; gap: 10px; align-items: center; }
+  .filter-row input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 6px; font-size: 12px; width: 180px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 16px; color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  td { padding: 9px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .badge-valid { background: rgba(34,201,123,0.15); color: var(--green); }
+  .badge-rejected { background: rgba(240,82,82,0.15); color: var(--red); }
+  .errors-cell { font-size: 11px; color: var(--red); max-width: 280px; }
+  .footer { padding: 16px 32px; color: var(--muted); font-size: 11px; border-top: 1px solid var(--border); }
+  .no-data { text-align: center; padding: 60px; color: var(--muted); }
+  canvas { max-height: 240px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Financial <span>Pipeline</span> Dashboard</h1>
+    <p id="run-time">No data loaded</p>
+  </div>
+  <div class="run-select">
+    <label>Run:</label>
+    <select id="runSelect" onchange="loadRun(this.value)"></select>
+  </div>
+</div>
+
+<div class="main">
+  <div class="metrics" id="metrics">
+    <div class="metric-card"><div class="label">Total</div><div class="value" id="m-total">—</div></div>
+    <div class="metric-card green"><div class="label">Valid</div><div class="value" id="m-valid">—</div></div>
+    <div class="metric-card red"><div class="label">Rejected</div><div class="value" id="m-rejected">—</div></div>
+    <div class="metric-card amber"><div class="label">Quality Rate</div><div class="value" id="m-quality">—</div><div class="sub" id="m-sub"></div></div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <h3>Valid vs Rejected</h3>
+      <canvas id="pieChart" role="img" aria-label="Donut chart of valid vs rejected records"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Amount by Currency (valid records)</h3>
+      <canvas id="barChart" role="img" aria-label="Bar chart of amounts per currency"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-full">
+    <h3>Rejection Reasons</h3>
+    <canvas id="errChart" role="img" aria-label="Horizontal bar chart of rejection reasons"></canvas>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <h3>Records</h3>
+      <div class="filter-row">
+        <select id="statusFilter" onchange="renderTable()">
+          <option value="all">All</option>
+          <option value="valid">Valid only</option>
+          <option value="rejected">Rejected only</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="Search records..." oninput="renderTable()">
+      </div>
+    </div>
+    <div id="tableContainer"></div>
+  </div>
+</div>
+
+<div class="footer" id="footer"></div>
+
+<script>
+const REPORTS = [{"source": "trades", "run_at": "2026-05-01T20:18:03.224711", "total_records": 10, "valid_records": 6, "rejected_records": 4, "quality_rate_pct": 60.0, "error_breakdown": {"Amount must be positive": 2, "Missing account ID": 1, "Invalid or unparseable date": 1}, "currency_totals": {"USD": 91400.0, "ZAR": 22000.0, "EUR": 7800.0, "GBP": 4400.0}, "output_files": {"valid": "/home/claude/financial_pipeline/data/output/trades_20260501_201803_valid.csv", "rejected": "/home/claude/financial_pipeline/data/output/trades_20260501_201803_rejected.csv", "full": "/home/claude/financial_pipeline/data/output/trades_20260501_201803_full.csv"}}, {"source": "payments", "run_at": "2026-05-01T20:18:03.241329", "total_records": 11, "valid_records": 6, "rejected_records": 5, "quality_rate_pct": 54.5, "error_breakdown": {"Amount must be positive": 1, "Missing account ID": 1, "Invalid or unparseable date": 1, "Duplicate transaction ID": 1, "Invalid currency code 'ABC'": 1}, "currency_totals": {"ZAR": 19100.0, "USD": 4600.0, "EUR": 6600.0}, "output_files": {"valid": "/home/claude/financial_pipeline/data/output/payments_20260501_201803_valid.csv", "rejected": "/home/claude/financial_pipeline/data/output/payments_20260501_201803_rejected.csv", "full": "/home/claude/financial_pipeline/data/output/payments_20260501_201803_full.csv"}}, {"source": "transactions", "run_at": "2026-05-01T20:18:03.257819", "total_records": 15, "valid_records": 9, "rejected_records": 6, "quality_rate_pct": 60.0, "error_breakdown": {"Invalid or unparseable date": 2, "Amount must be positive": 2, "Missing account ID": 1, "Duplicate transaction ID": 1, "Invalid currency code 'XYZ'": 1}, "currency_totals": {"ZAR": 103620.5, "EUR": 14200.0, "GBP": 320.75, "USD": 2750.0}, "output_files": {"valid": "/home/claude/financial_pipeline/data/output/transactions_20260501_201803_valid.csv", "rejected": "/home/claude/financial_pipeline/data/output/transactions_20260501_201803_rejected.csv", "full": "/home/claude/financial_pipeline/data/output/transactions_20260501_201803_full.csv"}}];
+let charts = {};
+let currentReport = null;
+let allRows = [];
+
+function init() {
+  const sel = document.getElementById('runSelect');
+  if (!REPORTS || REPORTS.length === 0) {
+    sel.innerHTML = '<option>No runs found</option>';
+    document.getElementById('tableContainer').innerHTML = '<div class="no-data">Run the pipeline first: python pipeline.py</div>';
+    return;
+  }
+  sel.innerHTML = REPORTS.map((r, i) =>
+    `<option value="${i}">${r.source} — ${new Date(r.run_at).toLocaleString()}</option>`
+  ).join('');
+  loadRun(REPORTS.length - 1);
+  sel.value = REPORTS.length - 1;
+}
+
+function loadRun(idx) {
+  currentReport = REPORTS[idx];
+  if (!currentReport) return;
+  document.getElementById('run-time').textContent =
+    'Run at: ' + new Date(currentReport.run_at).toLocaleString();
+
+  document.getElementById('m-total').textContent = currentReport.total_records.toLocaleString();
+  document.getElementById('m-valid').textContent = currentReport.valid_records.toLocaleString();
+  document.getElementById('m-rejected').textContent = currentReport.rejected_records.toLocaleString();
+  document.getElementById('m-quality').textContent = currentReport.quality_rate_pct + '%';
+  document.getElementById('m-sub').textContent = currentReport.valid_records + ' of ' + currentReport.total_records + ' passed';
+
+  loadCSVAndRender(currentReport.output_files.full);
+  renderCharts();
+}
+
+async function loadCSVAndRender(path) {
+  try {
+    const res = await fetch(path.replace(/\\/g, '/').split('/').slice(-1)[0]);
+    if (!res.ok) throw new Error('fetch failed');
+    const text = await res.text();
+    allRows = parseCSV(text);
+  } catch {
+    allRows = [];
+  }
+  renderTable();
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+  return lines.slice(1).map(line => {
+    const vals = line.split(',').map(v => v.trim().replace(/"/g, ''));
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = vals[i] || '');
+    return obj;
+  });
+}
+
+function renderTable() {
+  const status = document.getElementById('statusFilter').value;
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let data = allRows;
+  if (status === 'valid') data = data.filter(r => r._status === 'valid');
+  if (status === 'rejected') data = data.filter(r => r._status === 'rejected');
+  if (search) data = data.filter(r => JSON.stringify(r).toLowerCase().includes(search));
+
+  if (!data.length) {
+    document.getElementById('tableContainer').innerHTML = '<div class="no-data">No records match your filter.</div>';
+    return;
+  }
+
+  const keys = Object.keys(data[0]).filter(k => !k.startsWith('_'));
+  const rows = data.slice(0, 200);
+  document.getElementById('tableContainer').innerHTML = `
+    <table>
+      <thead><tr>${keys.map(k => `<th>${k}</th>`).join('')}<th>Status</th><th>Issues</th></tr></thead>
+      <tbody>${rows.map(r => `<tr>
+        ${keys.map(k => `<td>${r[k] || '—'}</td>`).join('')}
+        <td><span class="badge badge-${r._status}">${r._status || '?'}</span></td>
+        <td class="errors-cell">${r._error_summary || '—'}</td>
+      </tr>`).join('')}</tbody>
+    </table>`;
+  document.getElementById('footer').textContent =
+    `Showing ${Math.min(rows.length, 200)} of ${data.length} records  |  Output: ${currentReport.output_files.full}`;
+}
+
+function renderCharts() {
+  if (!currentReport) return;
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+
+  const r = currentReport;
+
+  charts.pie = new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Valid', 'Rejected'],
+      datasets: [{ data: [r.valid_records, r.rejected_records], backgroundColor: ['#22c97b','#f05252'], borderWidth: 0 }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#7a849a', boxWidth: 10, font: { size: 11 } } } } }
+  });
+
+  const ccyKeys = Object.keys(r.currency_totals || {});
+  charts.bar = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: ccyKeys,
+      datasets: [{ data: ccyKeys.map(k => r.currency_totals[k]), backgroundColor: '#4a9eff', borderRadius: 4 }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#7a849a' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#7a849a', callback: v => v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v.toLocaleString() }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+
+  const errKeys = Object.keys(r.error_breakdown || {}).sort((a,b) => r.error_breakdown[b] - r.error_breakdown[a]);
+  document.getElementById('errChart').parentElement.style.height = Math.max(120, errKeys.length * 42 + 40) + 'px';
+  charts.err = new Chart(document.getElementById('errChart'), {
+    type: 'bar',
+    data: {
+      labels: errKeys,
+      datasets: [{ data: errKeys.map(k => r.error_breakdown[k]), backgroundColor: '#f05252', borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#7a849a' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#7a849a', font: { size: 12 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+id,account_id,date,amount,currency,type,description,amount_clean,date_clean,currency_clean,type_clean,account_id_clean,_status
+TXN001,ACC100,2024-01-15,1500.00,ZAR,debit,Supplier payment,1500.0,2024-01-15,ZAR,debit,ACC100,valid
+TXN005,ACC100,2024-01-18,3400.50,ZAR,debit,,3400.5,2024-01-18,ZAR,debit,ACC100,valid
+TXN006,ACC103,2024-01-19,620,ZAR,payment,Rent,620.0,2024-01-19,ZAR,payment,ACC103,valid
+TXN008,ACC105,2024-02-01,14200,EUR,payment,Consulting fee,14200.0,2024-02-01,EUR,payment,ACC105,valid
+TXN009,ACC106,2024-02-03,5600,ZAR,credit,Sales revenue,5600.0,2024-02-03,ZAR,credit,ACC106,valid
+TXN010,ACC107,2024-02-04,320.75,GBP,transfer,Wire transfer,320.75,2024-02-04,GBP,transfer,ACC107,valid
+TXN011,ACC108,2024-02-05,88000,ZAR,payment,Equipment lease,88000.0,2024-02-05,ZAR,payment,ACC108,valid
+TXN013,ACC110,2024-02-07,4500,ZAR,payment,Office supplies,4500.0,2024-02-07,ZAR,payment,ACC110,valid
+TXN014,ACC111,2024-02-08,2750,USD,credit,Export revenue,2750.0,2024-02-08,USD,credit,ACC111,valid

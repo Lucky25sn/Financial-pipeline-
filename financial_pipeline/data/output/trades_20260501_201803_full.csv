@@ -1,0 +1,11 @@
+id,account_id,date,amount,currency,type,description,quantity,amount_clean,date_clean,currency_clean,type_clean,account_id_clean,_status,_error_summary
+TRD001,ACC200,2024-03-01,50000,USD,buy,AAPL,100,50000,2024-03-01,USD,buy,ACC200,valid,
+TRD002,ACC201,2024-03-02,-200,USD,sell,TSLA,50,-200,2024-03-02,USD,sell,ACC201,rejected,Amount must be positive
+TRD003,,2024-03-03,12000,eur,buy,MSFT,30,12000,2024-03-03,EUR,buy,,rejected,Missing account ID
+TRD004,ACC202,03/04/2024,8500,GBP,trade,GOOG,10,8500,,GBP,trade,ACC202,rejected,Invalid or unparseable date
+TRD005,ACC203,2024-03-05,22000,ZAR,sell,MTN,200,22000,2024-03-05,ZAR,sell,ACC203,valid,
+TRD006,ACC204,2024-03-06,9900,USD,buy,NVDA,15,9900,2024-03-06,USD,buy,ACC204,valid,
+TRD007,ACC205,2024-03-07,0,ZAR,buy,SOL,500,0,2024-03-07,ZAR,buy,ACC205,rejected,Amount must be positive
+TRD008,ACC206,2024-03-08,31500,USD,sell,AMZN,25,31500,2024-03-08,USD,sell,ACC206,valid,
+TRD009,ACC207,2024-03-09,7800,EUR,buy,SAP,40,7800,2024-03-09,EUR,buy,ACC207,valid,
+TRD010,ACC208,2024-03-10,4400,GBP,sell,BP,80,4400,2024-03-10,GBP,sell,ACC208,valid,

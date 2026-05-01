@@ -1,0 +1,6 @@
+id,account_id,date,amount,currency,type,description,amount_clean,date_clean,currency_clean,type_clean,account_id_clean,_status,_error_summary
+PAY003,ACC302,2024-04-03,-300,EUR,credit,REF-003,-300,2024-04-03,EUR,credit,ACC302,rejected,Amount must be positive
+PAY004,,2024-04-04,6700,GBP,transfer,REF-004,6700,2024-04-04,GBP,transfer,,rejected,Missing account ID
+PAY005,ACC304,bad-date,900,ZAR,payment,REF-005,900,,ZAR,payment,ACC304,rejected,Invalid or unparseable date
+PAY001,ACC305,2024-04-06,2200,ZAR,credit,REF-006,2200,2024-04-06,ZAR,credit,ACC305,rejected,Duplicate transaction ID
+PAY007,ACC307,2024-04-08,780,ABC,debit,REF-008,780,2024-04-08,ABC,debit,ACC307,rejected,Invalid currency code 'ABC'
